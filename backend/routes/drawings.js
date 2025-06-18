@@ -1,34 +1,34 @@
 const express = require('express');
+const router = express.Router();
 const Drawing = require('../models/Drawing');
 
-const router = express.Router();
 
-// Save a drawing
 router.post('/', async (req, res) => {
   try {
     const { name, shapes } = req.body;
-    if (!name || !shapes || !Array.isArray(shapes)) {
-      return res.status(400).json({ error: 'Name and shapes array are required' });
+    if (!name || !shapes) {
+      return res.status(400).json({ error: 'Name and shapes are required' });
     }
     const drawing = new Drawing({ name, shapes });
     await drawing.save();
     res.status(201).json(drawing);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+  } catch (error) {
+    console.error('Error saving drawing:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-// Get all drawings
+
 router.get('/', async (req, res) => {
   try {
-    const drawings = await Drawing.find().sort({ createdAt: -1 });
+    const drawings = await Drawing.find();
     res.json(drawings);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+  } catch (error) {
+    console.error('Error fetching drawings:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-// Delete a drawing
 router.delete('/:id', async (req, res) => {
   try {
     const drawing = await Drawing.findByIdAndDelete(req.params.id);
@@ -36,8 +36,9 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Drawing not found' });
     }
     res.json({ message: 'Drawing deleted' });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+  } catch (error) {
+    console.error('Error deleting drawing:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
