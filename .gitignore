@@ -1,0 +1,21 @@
+# Node.js
+node_modules/
+package-lock.json
+.npmrc
+
+# Vite
+client/.vite/
+client/dist/
+client/dist-ssr/
+
+# Environment
+backend/.env
+client/.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
